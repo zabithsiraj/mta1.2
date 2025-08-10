@@ -10,9 +10,12 @@ import (
         "strings"
         "time"
 
-        "github.com/emersion/go-smtp"
+       smtp "github.com/emersion/go-smtp"
 )
 
+var (
+    mailDir   = "/var/mailqueue"
+)
 // Backend implements SMTP authentication
 type Backend struct {
         users map[string]string
