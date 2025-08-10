@@ -36,7 +36,7 @@ func init() {
 
 const (
     queueDir    = "/var/mailqueue"
-    numWorkers  = 10                      // 🔁 Adjust worker count here
+    numWorkers  = 30                      // 🔁 Adjust worker count here
 )
 
 func main() {
