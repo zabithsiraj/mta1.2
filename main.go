@@ -52,21 +52,51 @@ func (bkd *Backend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, e
 }
 
 // Session handles the mail transaction
-type Session struct{}
+type Session struct {
+    from string
+    to   string
+}
 
 func (s *Session) Mail(from string, opts smtp.MailOptions) error {
-        log.Printf("Mail from: %s", from)
-        return nil
+    s.from = strings.Trim(from, " <>")
+    log.Println("MAIL FROM (cleaned):", s.from)
+    return nil
 }
 
 func (s *Session) Rcpt(to string) error {
-        log.Printf("Rcpt to: %s", to)
-        return nil
+    s.to = strings.Trim(to, " <>")
+    log.Println("RCPT TO (cleaned):", s.to)
+    return nil
 }
 
 func (s *Session) Data(r io.Reader) error {
-        log.Println("Receiving data...")
-        return nil
+    body, err := io.ReadAll(r)
+    if err != nil {
+        return err
+    }
+
+    cleanFrom := strings.Trim(s.from, " <>")
+    cleanTo := strings.Trim(s.to, " <>")
+
+
+
+
+  full := string(body)
+
+
+
+    filename := fmt.Sprintf("mail-%d.eml", time.Now().UnixNano())
+    filepath := fmt.Sprintf("%s/%s", mailDir, filename)
+
+    log.Printf("DEBUG: Saving mail with From: %s To: %s", cleanFrom, cleanTo)
+
+    err = os.WriteFile(filepath, []byte(full), 0644)
+    if err != nil {
+        return err
+    }
+
+    log.Println("📩 Saved email to:", filepath)
+    return nil
 }
 
 func (s *Session) Reset() {}
