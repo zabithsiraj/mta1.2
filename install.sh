@@ -3,7 +3,7 @@
 set -e
 
 # Prompt for domain name
-echo "Enter your domain name (e.g., mail.example.com):"
+echo "Enter your hostname FQDN (e.g., mail.example.com):"
 read -r DOMAIN_NAME
 
 if [[ -z "$DOMAIN_NAME" ]]; then
@@ -55,7 +55,8 @@ install_mta() {
   echo "[+] Copying source code..."
   cp main.go "$GO_MTA_DIR/main.go"
   cp queue.go "$GO_MTA_DIR/queue.go"
-  cd "$GO_MTA_DIR"
+  cp users.txt "$GO_MTA_DIR/users.txt"
+  cd "$GO_MTA_DIR" 
 
   echo "[+] Initializing Go module..."
   "$GO_PATH/go" mod init go-mta
